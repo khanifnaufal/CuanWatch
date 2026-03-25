@@ -23,7 +23,7 @@ const CandlestickChart = ({ children,
     const chartRef = useRef<IChartApi | null>(null);
     const candleSeriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
 
-    const [loading, setLoading] = useState(false);
+
     const [period, setPeriod] = useState(initialPeriod);
     const [ohlcData, setOhlcData] = useState<OHLCData[]>(data ?? []);
     const [isPending, startTransition] = useTransition();
@@ -32,7 +32,7 @@ const CandlestickChart = ({ children,
         try {
             const config = PERIOD_CONFIG[selectedPeriod];
 
-            const newData =await fetcher<OHLCData[]>(`/coins/${coinId}/ohlc`, {
+            const newData = await fetcher<OHLCData[]>(`/coins/${coinId}/ohlc`, {
                 vs_currency: 'usd',
                 days: config.days,
             });
@@ -46,7 +46,7 @@ const CandlestickChart = ({ children,
     const handlePeriodChange = (newPeriod: Period) => {
         if (newPeriod === period) return;
 
-        startTransition(async() => {
+        startTransition(async () => {
             setPeriod(newPeriod);
             await fetchOHLCData(newPeriod);
         });
@@ -58,37 +58,40 @@ const CandlestickChart = ({ children,
 
         const showTime = ['daily', 'weekly', 'monthly'].includes(period);
 
-        const chart = createChart(container,{
-            ...getChartConfig(height,showTime),
-            width:container.clientWidth,
+        const chart = createChart(container, {
+            ...getChartConfig(height, showTime),
+            width: container.clientWidth,
         });
         const series = chart.addSeries(CandlestickSeries, getCandlestickConfig());
 
-        series.setData(convertOHLCData(ohlcData));
+        const convertedToSeconds = ohlcData.map((item) =>
+            [Math.floor(item[0] / 1000), item[1], item[2], item[3], item[4]] as OHLCData
+        );
+        series.setData(convertOHLCData(convertedToSeconds));
         chart.timeScale().fitContent();
 
         chartRef.current = chart;
         candleSeriesRef.current = series;
 
-        const observer = new ResizeObserver((entries) =>{
+        const observer = new ResizeObserver((entries) => {
             if (!entries.length) return;
-            chart.applyOptions({width: entries[0].contentRect.width});
+            chart.applyOptions({ width: entries[0].contentRect.width });
         });
         observer.observe(container);
 
         return () => {
             observer.disconnect();
             chart.remove();
-            chartRef.current =null;
+            chartRef.current = null;
             candleSeriesRef.current = null;
         }
-    }, [height]);
+    }, [height, period]);
 
     useEffect(() => {
-        if(!candleSeriesRef.current) return;
+        if (!candleSeriesRef.current) return;
 
-        const convertedToSeconds = ohlcData.map((item) => 
-            [Math.floor(item[0] / 1000), item[1], item[2], item[3], item[4]] as 
+        const convertedToSeconds = ohlcData.map((item) =>
+            [Math.floor(item[0] / 1000), item[1], item[2], item[3], item[4]] as
             OHLCData,
         );
 
@@ -111,7 +114,7 @@ const CandlestickChart = ({ children,
                                 className={period === value ? 'rounded-sm px-2.5 py-1.5 border-0 cursor-pointer text-sm text-gray-900 bg-green-500'
                                     : 'rounded-sm border-0 cursor-pointer px-2.5 py-2 text-xs xl:text-sm text-purple-100 hover:bg-dark-400 hover:text-whitetext-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'}
                                 onClick={() => handlePeriodChange(value)}
-                                disabled={loading}
+                                disabled={isPending}
                             >
                                 {label}
                             </button>
