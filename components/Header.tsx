@@ -14,7 +14,7 @@ const Header = () => {
     <div className="main-container inner">
       <Link href="/">
         <Image
-          src="/logo.png"
+          src="/logo1.png"
           alt="CuanWatch Logo"
           width={200}
           height={40}
