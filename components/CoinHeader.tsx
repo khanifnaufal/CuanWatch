@@ -11,9 +11,9 @@ const CoinHeader = ({
   livePrice,
   priceChange24h,
 }: LiveCoinHeaderProps) => {
-  const isTrendingUp = livePriceChangePercentage24h > 0;
-  const isThirtyDayUp = priceChangePercentage30d > 0;
-  const isPriceChangeUp = priceChange24h > 0;
+  const isTrendingUp = livePriceChangePercentage24h >= 0;
+  const isThirtyDayUp = priceChangePercentage30d >= 0;
+  const isPriceChangeUp = priceChange24h >= 0;
 
   const stats = [
     {

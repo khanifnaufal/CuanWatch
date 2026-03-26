@@ -1,5 +1,4 @@
 'use client';
-import { channel } from "diagnostics_channel";
 import { useEffect, useRef, useState } from "react";
 
 const WS_BASE = `${process.env.NEXT_PUBLIC_COINGECKO_WEBSOCKET_URL}?x_cg_pro_api_key=${process.env.NEXT_PUBLIC_COINGECKO_API_KEY}`;
@@ -10,7 +9,7 @@ export const useCoinGeckoWebSocket = ({
     liveInterval,
 }: UseCoinGeckoWebSocketProps): UseCoinGeckoWebSocketReturn => {
     const wsRef = useRef<WebSocket | null>(null);
-    const subscribed = useRef(<Set<string>>new Set());
+    const subscribed = useRef<Set<string>>(new Set());
 
     const [price, setPrice] = useState<ExtendedPriceData | null>(null);
     const [trades, setTrades] = useState<Trade[]>([]);
@@ -25,7 +24,14 @@ export const useCoinGeckoWebSocket = ({
         const send = (payload: Record<string, unknown>) => ws.send(JSON.stringify(payload));
 
         const handleMessage = (event: MessageEvent) => {
-            const msg: WebSocketMessage = JSON.parse(event.data);
+            let msg: WebSocketMessage;
+            try {
+                msg = JSON.parse(event.data);
+            } catch {
+                console.warn('Failed to parse WebSocket message:', event.data);
+                return;
+            }
+
 
             if (msg.type === 'ping') {
                 send({ type: 'pong' });
@@ -33,9 +39,12 @@ export const useCoinGeckoWebSocket = ({
             }
 
             if (msg.type === 'confirm_subscription') {
-                const { channel } = JSON.parse(msg?.identifier ?? '');
-
-                subscribed.current.add(channel);
+                try {
+                    const { channel } = JSON.parse(msg?.identifier ?? '{}');
+                    if (channel) subscribed.current.add(channel);
+                } catch {
+                    // ignore malformed identifier
+                }
             }
 
             if (msg.c === 'C1') {
