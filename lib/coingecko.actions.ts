@@ -73,9 +73,18 @@ export async function searchCoins(query: string) {
 
   try {
     // FETCH 1: Cari ID koin (ini nggak ada data harga/persen)
-    const searchRes = await fetch(`https://api.coingecko.com/api/v3/search?query=${query}`);
+    const searchRes = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(query)}`, {
+      headers: {
+        'x-cg-demo-api-key': API_KEY!,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!searchRes.ok) {
+      console.error(`Search API error: ${searchRes.status}`);
+      return [];
+    }
     const searchData = await searchRes.json();
-    
+
     if (!searchData.coins || searchData.coins.length === 0) return [];
 
     // EXTRACTION: Ambil 10 ID saja biar nggak lemot
@@ -85,6 +94,10 @@ export async function searchCoins(query: string) {
     const marketRes = await fetch(
       `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${top10Ids}&order=market_cap_desc&sparkline=false&price_change_percentage=24h`
     );
+    if (!marketRes.ok) {
+      console.error(`Markets API error: ${marketRes.status}`);
+      return [];
+    }
     const marketData = await marketRes.json();
 
     // MERGE: Satukan datanya

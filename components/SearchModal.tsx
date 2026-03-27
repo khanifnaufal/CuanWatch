@@ -62,7 +62,7 @@ return (
         'text-red-500': change < 0,
       })}
     >
-      {change > 0 ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+      {change !== 0 && (change > 0 ? <TrendingUp size={14} /> : <TrendingDown size={14} />)}
       <span>{formatPercentage(Math.abs(change))}</span>
     </div>
   </CommandItem>
@@ -149,11 +149,11 @@ const { data: searchResults = [], isValidating: isSearching } = useSWR<SearchCoi
               {isResultsVisible && (
                 <CommandGroup heading="Results">
                   {searchResults.map(coin => (
-                    <SearchItem key={coin.id} coin={coin} onSelect={handleSelect} />
+                    <SearchItem key={coin.id} coin={coin} onSelect={handleSelect} isActiveName={false} />
                   ))}
                 </CommandGroup>
               )}
-              <CommandEmpty>No results found.</CommandEmpty>
+              {isNoResults && <CommandEmpty>No results found.</CommandEmpty>}
             </CommandList>
           </Command>
         </DialogContent>
