@@ -67,3 +67,39 @@ export async function getPools(
     return fallback;
   }
 }
+// Pastikan nama fungsinya sama dengan yang di-import di SearchModal.tsx tutorial itu
+export async function searchCoins(query: string) {
+  if (!query) return [];
+
+  try {
+    // FETCH 1: Cari ID koin (ini nggak ada data harga/persen)
+    const searchRes = await fetch(`https://api.coingecko.com/api/v3/search?query=${query}`);
+    const searchData = await searchRes.json();
+    
+    if (!searchData.coins || searchData.coins.length === 0) return [];
+
+    // EXTRACTION: Ambil 10 ID saja biar nggak lemot
+    const top10Ids = searchData.coins.slice(0, 10).map((c: any) => c.id).join(',');
+
+    // FETCH 2: Ambil data market (ini baru ada data persennya)
+    const marketRes = await fetch(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${top10Ids}&order=market_cap_desc&sparkline=false&price_change_percentage=24h`
+    );
+    const marketData = await marketRes.json();
+
+    // MERGE: Satukan datanya
+    return searchData.coins.slice(0, 10).map((coin: any) => {
+      const marketInfo = marketData.find((m: any) => m.id === coin.id);
+      return {
+        ...coin,
+        // Pastikan mapping nama propertinya benar sesuai yang dipanggil di SearchItem
+        data: {
+          price_change_percentage_24h: marketInfo?.price_change_percentage_24h_in_currency || marketInfo?.price_change_percentage_24h || 0
+        }
+      };
+    });
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
