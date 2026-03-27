@@ -43,7 +43,15 @@ const Converter = ({ symbol, icon, priceList }: ConverterProps) => {
         <div className="output-wrapper">
           <p>{formatCurrency(convertedPrice, 2, currency, false)}</p>
 
-          <Select value={currency} onValueChange={setCurrency}>
+          <Select
+            value={currency}
+            onValueChange={(value) => {
+              // Karena 'value' di sini sudah pasti string atau null dari library-nya
+              if (value) {
+                setCurrency(value);
+              }
+            }}
+          >
             <SelectTrigger className="select-trigger" value={currency}>
               <SelectValue placeholder="Select" className="select-value">
                 {currency.toUpperCase()}
@@ -59,7 +67,7 @@ const Converter = ({ symbol, icon, priceList }: ConverterProps) => {
           </Select>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 
