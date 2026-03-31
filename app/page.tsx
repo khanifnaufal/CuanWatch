@@ -5,8 +5,10 @@ import {
   CategoriesFallback,
   CoinOverviewFallback,
   TrendingCoinsFallback,
+  TopGainersLosersFallback,
 } from '@/components/home/fallback';
 import Categories from '@/components/home/Categories';
+import TopGainersLosers from '@/components/home/TopGainersLosers';
 
 const Page = async () => {
   return (
@@ -18,6 +20,12 @@ const Page = async () => {
 
         <Suspense fallback={<TrendingCoinsFallback />}>
           <TrendingCoins />
+        </Suspense>
+      </section>
+
+      <section className="w-full mt-7">
+        <Suspense fallback={<TopGainersLosersFallback />}>
+          <TopGainersLosers />
         </Suspense>
       </section>
 
