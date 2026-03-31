@@ -114,3 +114,81 @@ export const CategoriesFallback = () => {
     </div>
   );
 };
+
+export const TopGainersLosersFallback = () => {
+  const columns = [
+    {
+      header: 'Token',
+      cellClassName: 'name-cell',
+      cell: () => (
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full skeleton" />
+          <div className="flex flex-col gap-1">
+            <div className="h-4 w-16 skeleton rounded" />
+            <div className="h-3 w-8 skeleton rounded" />
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: 'Price',
+      cellClassName: 'price-cell max-w-[100px]',
+      cell: () => <div className="h-4 w-16 skeleton rounded" />,
+    },
+    {
+      header: '24h',
+      cellClassName: 'change-cell text-right w-[90px]',
+      cell: () => (
+        <div className="flex justify-end">
+          <div className="h-4 w-12 skeleton rounded" />
+        </div>
+      ),
+    },
+  ];
+
+  const dummyData = Array.from({ length: 5 }, (_, i) => ({ id: i }));
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+      <div className="bg-[#121212] rounded-2xl border border-zinc-800/50 p-6 flex flex-col gap-4 shadow-xl">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 w-10 h-10 skeleton rounded-lg" />
+          <div className="space-y-2">
+            <div className="w-24 h-5 skeleton rounded" />
+            <div className="w-32 h-3 skeleton rounded" />
+          </div>
+        </div>
+        <DataTable
+          data={dummyData}
+          columns={columns as any}
+          rowKey={(item: any) => item.id}
+          tableClassName="w-full"
+          headerRowClassName="border-b border-zinc-800"
+          headerCellClassName="py-3 text-xs text-zinc-500 font-medium text-left"
+          bodyRowClassName="border-b border-zinc-800/30 last:border-0"
+          bodyCellClassName="py-3"
+        />
+      </div>
+
+      <div className="bg-[#121212] rounded-2xl border border-zinc-800/50 p-6 flex flex-col gap-4 shadow-xl">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 w-10 h-10 skeleton rounded-lg" />
+          <div className="space-y-2">
+            <div className="w-24 h-5 skeleton rounded" />
+            <div className="w-32 h-3 skeleton rounded" />
+          </div>
+        </div>
+        <DataTable
+          data={dummyData}
+          columns={columns as any}
+          rowKey={(item: any) => item.id}
+          tableClassName="w-full"
+          headerRowClassName="border-b border-zinc-800"
+          headerCellClassName="py-3 text-xs text-zinc-500 font-medium text-left"
+          bodyRowClassName="border-b border-zinc-800/30 last:border-0"
+          bodyCellClassName="py-3"
+        />
+      </div>
+    </div>
+  );
+};
