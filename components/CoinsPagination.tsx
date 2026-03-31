@@ -9,14 +9,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { buildPageNumbers, cn, ELLIPSIS } from '@/lib/utils';
 
 const CoinsPagination = ({ currentPage, totalPages, hasMorePages }: Pagination) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handlePageChange = (page: number) => {
-    router.push(`/coins?page=${page}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    router.push(`/coins?${params.toString()}`);
   };
 
   const pageNumbers = buildPageNumbers(currentPage, totalPages);

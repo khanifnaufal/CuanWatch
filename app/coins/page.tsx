@@ -5,9 +5,12 @@ import Link from 'next/link';
 import { cn, formatPercentage, formatCurrency } from '@/lib/utils';
 import DataTable from '@/components/DataTable';
 import CoinsPagination from '@/components/CoinsPagination';
+import CategoryTabs from '@/components/coins/CategoryTabs';
 
 const Coins = async ({ searchParams }: NextPageProps) => {
-  const { page } = await searchParams;
+  const resolvedParams = await searchParams;
+  const page = resolvedParams.page;
+  const category = (resolvedParams.category as string) || undefined;
 
   const currentPage = Number(page) || 1;
   const perPage = 10;
@@ -19,6 +22,7 @@ const Coins = async ({ searchParams }: NextPageProps) => {
     page: currentPage,
     sparkline: 'false',
     price_change_percentage: '24h',
+    ...(category ? { category } : {}),
   });
 
   const columns: DataTableColumn<CoinMarketData>[] = [
@@ -82,7 +86,9 @@ const Coins = async ({ searchParams }: NextPageProps) => {
   return (
     <main id="coins-page">
       <div className="content">
-        <h4>All Coins</h4>
+        <h4 className="mb-4">All Coins</h4>
+
+        <CategoryTabs currentCategory={category} />
 
         <DataTable
           tableClassName="coins-table"
