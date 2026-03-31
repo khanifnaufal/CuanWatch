@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import { fetcher } from '@/lib/coingecko.actions';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -97,11 +98,13 @@ const Coins = async ({ searchParams }: NextPageProps) => {
           rowKey={(coin) => coin.id}
         />
 
-        <CoinsPagination
-          currentPage={currentPage}
-          totalPages={estimatedTotalPages}
-          hasMorePages={hasMorePages}
-        />
+        <Suspense fallback={<div>Loading pagination...</div>}>
+          <CoinsPagination
+            currentPage={currentPage}
+            totalPages={estimatedTotalPages}
+            hasMorePages={hasMorePages}
+          />
+        </Suspense>
       </div>
     </main>
   );
