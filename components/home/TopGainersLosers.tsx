@@ -50,11 +50,14 @@ const TopGainersLosers = async () => {
       header: '24h',
       cellClassName: 'change-cell text-right w-[90px]',
       cell: (coin) => {
-        const isUp = coin.price_change_percentage_24h > 0;
+        const change = coin.price_change_percentage_24h;
+        const isUp = change > 0;
+        const isDown = change < 0;
         return (
-          <div className={cn('flex items-center justify-end gap-1 font-medium', isUp ? 'text-green-500' : 'text-red-500')}>
-            <span>{formatPercentage(Math.abs(coin.price_change_percentage_24h))}</span>
-            {isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+          <div className={cn('flex items-center justify-end gap-1 font-medium', isUp ? 'text-green-500' : isDown ? 'text-red-500' : 'text-zinc-400')}>
+            <span>{formatPercentage(Math.abs(change))}</span>
+            {isUp && <TrendingUp size={14} />}
+            {isDown && <TrendingDown size={14} />}
           </div>
         );
       },
@@ -77,7 +80,7 @@ const TopGainersLosers = async () => {
         <DataTable
           data={gainers}
           columns={columns}
-          rowKey={(coin) => Math.random() + coin.id}
+          rowKey={(coin) => coin.id}
           tableClassName="w-full"
           headerRowClassName="border-b border-zinc-800"
           headerCellClassName="py-3 text-xs text-zinc-500 font-medium text-left"
@@ -100,7 +103,7 @@ const TopGainersLosers = async () => {
         <DataTable
           data={losers}
           columns={columns}
-          rowKey={(coin) => Math.random() + coin.id}
+          rowKey={(coin) => coin.id}
           tableClassName="w-full"
           headerRowClassName="border-b border-zinc-800"
           headerCellClassName="py-3 text-xs text-zinc-500 font-medium text-left"
