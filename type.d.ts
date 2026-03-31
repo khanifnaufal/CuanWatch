@@ -240,6 +240,7 @@ interface LiveCoinHeaderProps {
 }
 
 interface Category {
+  id: string;
   name: string;
   top_3_coins: string[];
   market_cap_change_24h: number;
