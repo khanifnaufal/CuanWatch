@@ -116,3 +116,16 @@ export async function searchCoins(query: string) {
     return [];
   }
 }
+
+export async function getPublicTreasury(coinId: string): Promise<PublicTreasuryResponse | null> {
+  try {
+    return await fetcher<PublicTreasuryResponse>(
+      `/companies/public_treasury/${coinId}`,
+      {},
+      3600 // Revalidate every hour
+    );
+  } catch (error) {
+    console.error(`Error fetching public treasury for ${coinId}:`, error);
+    return null;
+  }
+}
