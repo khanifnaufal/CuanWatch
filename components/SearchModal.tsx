@@ -138,7 +138,14 @@ const { data: searchResults = [], isValidating: isSearching } = useSWR<SearchCoi
   return (
     <div id='search-modal'>
       {trigger ? (
-        <div onClick={() => setOpen(true)}>{trigger}</div>
+        <div 
+          onClick={() => setOpen(true)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setOpen(true); }}
+          role="button"
+          tabIndex={0}
+        >
+          {trigger}
+        </div>
       ) : (
         <Button variant='ghost' onClick={() => setOpen(true)} className='trigger'>
           <SearchIcon size={18} /> Search

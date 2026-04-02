@@ -18,7 +18,7 @@ const MarketDominance = ({ data }: MarketDominanceProps) => {
   ];
 
   return (
-    <div id="trending-coins" className="flex flex-col h-full">
+    <div id="market-dominance" className="flex flex-col h-full">
       <h4 className="w-full">Market Dominance</h4>
       <div className="h-64 mt-4 relative">
         <ResponsiveContainer width="100%" height="100%">

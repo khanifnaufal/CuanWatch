@@ -15,7 +15,7 @@ const PortfolioPage = () => {
   const { portfolio, addAsset, removeAsset, isLoaded } = usePortfolio();
   const [prices, setPrices] = useState<Record<string, { usd: number }>>({});
   const [isUpdating, setIsUpdating] = useState(false);
-  
+
   // Modal state for adding asset details
   const [selectedCoin, setSelectedCoin] = useState<Partial<PortfolioItem> | null>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -53,7 +53,7 @@ const PortfolioPage = () => {
 
   const handleAddAsset = () => {
     if (!selectedCoin || !amount || !buyPrice) return;
-    
+
     addAsset({
       id: selectedCoin.id!,
       symbol: selectedCoin.symbol!,
@@ -62,7 +62,7 @@ const PortfolioPage = () => {
       amount: parseFloat(amount),
       buyPrice: parseFloat(buyPrice),
     });
-    
+
     setAddModalOpen(false);
     setAmount('');
     setBuyPrice('');
@@ -78,7 +78,7 @@ const PortfolioPage = () => {
       const currentPrice = prices[item.id]?.usd || item.buyPrice;
       const currentValue = item.amount * currentPrice;
       const cost = item.amount * item.buyPrice;
-      
+
       totalValue += currentValue;
       totalCost += cost;
       totalProfit += (currentValue - cost);
@@ -100,19 +100,19 @@ const PortfolioPage = () => {
           <h1 className="text-4xl font-bold text-white mb-2">Portfolio Simulator</h1>
           <p className="text-purple-100/70">Track your imaginary bags with real-time prices.</p>
         </div>
-        
+
         <div className="flex gap-3">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            onClick={fetchCurrentPrices} 
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={fetchCurrentPrices}
             disabled={isUpdating || portfolio.length === 0}
             className="border-purple-600/20 bg-dark-500 hover:bg-dark-600"
           >
             <RefreshCcw className={cn("size-4", isUpdating && "animate-spin")} />
           </Button>
-          
-          <SearchModal 
+
+          <SearchModal
             onSelect={handleCoinSelect}
             trigger={
               <Button className="bg-green-500 hover:bg-green-600 text-dark-900 font-bold px-6">
@@ -138,7 +138,7 @@ const PortfolioPage = () => {
           </div>
         </div>
         <div className="bg-dark-500 border border-purple-600/10 p-6 rounded-2xl">
-          <p className="text-purple-100/60 text-sm font-medium mb-1">24h Performance</p>
+          <p className="text-purple-100/60 text-sm font-medium mb-1">Overall Performance</p>
           <div className={cn("flex items-center gap-1 text-2xl font-bold", profitPercentage >= 0 ? "text-green-500" : "text-red-500")}>
             {profitPercentage >= 0 ? <TrendingUp className="size-6" /> : <TrendingDown className="size-6" />}
             {profitPercentage.toFixed(2)}%
@@ -172,8 +172,10 @@ const PortfolioPage = () => {
                 {portfolio.map((item) => {
                   const currentPrice = prices[item.id]?.usd || item.buyPrice;
                   const profit = (currentPrice - item.buyPrice) * item.amount;
-                  const pPercentage = ((currentPrice - item.buyPrice) / item.buyPrice) * 100;
-                  
+                  const pPercentage = item.buyPrice > 0
+                    ? ((currentPrice - item.buyPrice) / item.buyPrice) * 100
+                    : 0;
+
                   return (
                     <tr key={item.id} className="hover:bg-purple-600/5 transition-colors">
                       <td className="px-6 py-4">
@@ -204,9 +206,9 @@ const PortfolioPage = () => {
                         </p>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           onClick={() => removeAsset(item.id)}
                           className="text-red-500/50 hover:text-red-500 hover:bg-red-500/10"
                         >
@@ -231,20 +233,20 @@ const PortfolioPage = () => {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-purple-100/60">Amount</label>
-              <Input 
-                type="number" 
-                placeholder="0.00" 
-                value={amount} 
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="bg-dark-900 border-purple-600/20 focus:border-purple-600"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-purple-100/60">Buy Price (USD)</label>
-              <Input 
-                type="number" 
-                placeholder="current price" 
-                value={buyPrice} 
+              <Input
+                type="number"
+                placeholder="current price"
+                value={buyPrice}
                 onChange={(e) => setBuyPrice(e.target.value)}
                 className="bg-dark-900 border-purple-600/20 focus:border-purple-600"
               />
@@ -252,7 +254,7 @@ const PortfolioPage = () => {
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setAddModalOpen(false)}>Cancel</Button>
-            <Button 
+            <Button
               onClick={handleAddAsset}
               className="bg-green-500 hover:bg-green-600 text-dark-900 font-bold"
             >

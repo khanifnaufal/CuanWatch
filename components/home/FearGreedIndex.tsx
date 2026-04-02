@@ -25,7 +25,7 @@ const FearGreedIndex = ({ data }: FearGreedIndexProps) => {
   const needleRotation = (value / 100) * 180 - 90;
 
   return (
-    <div id="trending-coins" className="flex flex-col items-center">
+    <div id="fear-greed-index" className="flex flex-col items-center">
       <h4 className="w-full">Market Sentiment</h4>
       <div className="relative h-48 w-full mt-4">
         <ResponsiveContainer width="100%" height="100%">
