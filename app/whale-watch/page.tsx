@@ -18,7 +18,7 @@ export default async function WhaleWatchPage() {
       <div className="flex flex-col space-y-2 mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-white">Whale Watch</h1>
         <p className="text-purple-100 text-lg">
-          Track public companies with the largest crypto perbendaharaan (treasury).
+          Track public companies with the largest crypto treasury holdings.
         </p>
       </div>
 
@@ -27,13 +27,13 @@ export default async function WhaleWatchPage() {
           <TabsList className="bg-dark-500 border border-purple-600/20 p-1 h-12">
             <TabsTrigger 
               value="bitcoin" 
-              className="px-8 font-semibold data-[state=active]:bg-green-500 data-[state=active]:text-dark-900"
+              className="px-8 font-semibold data-active:bg-green-500 data-active:text-dark-900"
             >
               Bitcoin (BTC)
             </TabsTrigger>
             <TabsTrigger 
               value="ethereum" 
-              className="px-8 font-semibold data-[state=active]:bg-green-500 data-[state=active]:text-dark-900"
+              className="px-8 font-semibold data-active:bg-green-500 data-active:text-dark-900"
             >
               Ethereum (ETH)
             </TabsTrigger>
