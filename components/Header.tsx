@@ -45,6 +45,11 @@ const Header = () => {
           {'is-active' : pathname == '/coins',
             'is-home' : false
           } )}> All Coins </Link>
+
+        <Link href="/whale-watch" className={cn('nav-link',
+          {'is-active' : pathname == '/whale-watch',
+            'is-home' : false
+          } )}> Whale Watch </Link>
       </nav>
     </div>
     </header>

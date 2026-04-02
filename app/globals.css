@@ -763,7 +763,7 @@
     }
 
     .tabs-trigger {
-      @apply data-[state=active]:border-none! data-[state=active]:bg-transparent! flex justify-start! mb-0! py-2! text-lg! font-semibold! md:text-2xl!;
+      @apply data-active:border-none! data-active:bg-transparent! flex justify-start! mb-0! py-2! text-lg! font-semibold! md:text-2xl!;
     }
 
     .tabs-content {

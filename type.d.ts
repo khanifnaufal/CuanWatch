@@ -317,3 +317,20 @@ interface PoolData {
   name: string;
   network: string;
 }
+
+interface TreasuryCompany {
+  name: string;
+  symbol: string;
+  country: string;
+  total_holdings: number;
+  total_entry_value_usd: number;
+  total_current_value_usd: number;
+  percentage_of_total_supply: number;
+}
+
+interface PublicTreasuryResponse {
+  total_holdings: number;
+  total_value_usd: number;
+  market_cap_dominance: number;
+  companies: TreasuryCompany[];
+}
