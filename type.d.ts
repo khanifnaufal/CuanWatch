@@ -333,4 +333,35 @@ interface PublicTreasuryResponse {
   total_value_usd: number;
   market_cap_dominance: number;
   companies: TreasuryCompany[];
-}
+}
+
+interface FearGreedData {
+  value: string;
+  value_classification: string;
+  timestamp: string;
+}
+
+interface FearGreedResponse {
+  data: FearGreedData[];
+}
+
+interface GlobalData {
+  data: {
+    active_cryptocurrencies: number;
+    markets: number;
+    total_market_cap: Record<string, number>;
+    total_volume: Record<string, number>;
+    market_cap_percentage: Record<string, number>;
+    market_cap_change_percentage_24h_usd: number;
+  };
+}
+
+interface PortfolioItem {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  amount: number;
+  buyPrice: number;
+}
+

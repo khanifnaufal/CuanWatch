@@ -71,8 +71,12 @@ return (
 
 export const SearchModal = ({
   initialTrendingCoins = [],
+  onSelect,
+  trigger,
 }: {
-  initialTrendingCoins: TrendingCoin[];
+  initialTrendingCoins?: TrendingCoin[];
+  onSelect?: (coinId: string) => void;
+  trigger?: React.ReactNode;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -114,7 +118,11 @@ const { data: searchResults = [], isValidating: isSearching } = useSWR<SearchCoi
     setOpen(false);
     setSearchQuery('');
     setDebouncedQuery('');
-    router.push(`/coins/${coinId}`);
+    if (onSelect) {
+      onSelect(coinId);
+    } else {
+      router.push(`/coins/${coinId}`);
+    }
   };
 
   const hasQuery = debouncedQuery.length > 0;
@@ -129,10 +137,14 @@ const { data: searchResults = [], isValidating: isSearching } = useSWR<SearchCoi
 
   return (
     <div id='search-modal'>
-      <Button variant='ghost' onClick={() => setOpen(true)} className='trigger'>
-        <SearchIcon size={18} /> Search
-        <kbd className='kbd'>ctrl + k</kbd>
-      </Button>
+      {trigger ? (
+        <div onClick={() => setOpen(true)}>{trigger}</div>
+      ) : (
+        <Button variant='ghost' onClick={() => setOpen(true)} className='trigger'>
+          <SearchIcon size={18} /> Search
+          <kbd className='kbd'>ctrl + k</kbd>
+        </Button>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="p-0 overflow-hidden border-none bg-transparent shadow-none max-w-2xl">

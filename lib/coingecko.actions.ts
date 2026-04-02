@@ -128,4 +128,53 @@ export async function getPublicTreasury(coinId: string): Promise<PublicTreasuryR
     console.error(`Error fetching public treasury for ${coinId}:`, error);
     return null;
   }
-}
+}
+
+export async function getGlobalMarketData(): Promise<GlobalData | null> {
+  try {
+    return await fetcher<GlobalData>('/global', {}, 3600);
+  } catch (error) {
+    console.error('Error fetching global market data:', error);
+    return null;
+  }
+}
+
+export async function getCoinPrices(ids: string[]): Promise<Record<string, { usd: number }>> {
+  if (ids.length === 0) return {};
+  try {
+    const data = await fetcher<Record<string, { usd: number }>>('/simple/price', {
+      ids: ids.join(','),
+      vs_currencies: 'usd',
+    });
+    return data || {};
+  } catch (error) {
+    console.error('Error fetching coin prices:', error);
+    return {};
+  }
+}
+
+export async function getSimpleCoinDetails(id: string): Promise<Partial<PortfolioItem> | null> {
+  try {
+    const data = await fetcher<any>(`/coins/${id}`, {
+      localization: false,
+      tickers: false,
+      market_data: true,
+      community_data: false,
+      developer_data: false,
+      sparkline: false,
+    }, 3600);
+    
+    return {
+      id: data.id,
+      symbol: data.symbol,
+      name: data.name,
+      image: data.image.small,
+      buyPrice: data.market_data.current_price.usd,
+    };
+  } catch (error) {
+    console.error('Error fetching coin details:', error);
+    return null;
+  }
+}
+
+
